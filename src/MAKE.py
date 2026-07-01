@@ -1,4 +1,7 @@
 import os
+from threading import Thread
+import subprocess
+from concurrent.futures import ThreadPoolExecutor
 
 def index_str(ls, i):
     if i in range (0, len(ls)):
@@ -13,13 +16,43 @@ def index_str_nowarn(ls, i):
     else:  
         return ""
 
-def ls_R(directory):
+def ls_r_x(directory, exclusions): # list files recursively with exclusions
+    directory = os.path.abspath(directory)
+    for d,dirs in enumerate(exclusions):
+        exclusions[d] = os.path.abspath(exclusions[d])
+        
     all_files = []
-    for root, dirs, files in os.walk():
+    path = None
+    clear = True
+    for root, dirs, files in os.walk(directory):
         for file in files:
-            all_files.append(os.path.join(root, file))
-    print(all_files)
+            path = os.path.join(root, file)
+            clear = True
+            for ex in exclusions:
+                if ex in path:
+                    clear = False
+                    break
+            if (clear == True):
+                all_files.append(path)
     return all_files
+
+def ls_dir_r(directory): # list directories recursively
+    directory = os.path.abspath(directory)
+    all_dirs = []
+    for root, dirs, files in os.walk(directory):
+        for d in dirs:
+            all_dirs.append(os.path.join(root, d))
+    return all_dirs
+
+def async_bash(command):
+    out = subprocess.run(
+        command,
+        shell=True,
+        capture_output=True,
+        text=True
+    )
+    print(out)
+    
 
 def main():
     print("--------------------------------------------------------------------------------------------------------------")
@@ -29,12 +62,12 @@ def main():
         chelp = input("Please Type v for Verbose Mode Details or Type s for Settings Syntax: ")
         if chelp.lower() == "v":
             print("Verbose mode is for debug\nType \"v\" During Confirmation to Enter Verbose Mode\n\n    Part 0 == Initial Setup and Confirmation\n    Part 1 == Argument Gathering\n    Part 2 == Data Processing\n\n")
-    elif (not mode.isdigit):
-        return 0
+    elif not mode.isdigit():
         print("The Mode Must Be a Number or \"h\"")
+        return 0
     
     # get directory of script
-    script_dir = os.path.dirname(os.path.abspath(__file__))
+    script_dir = os.getcwd()
     
     # confirm if directory is correct
     c = input("Continue @" + str(script_dir) + " [Y/n/v]: ")
@@ -42,25 +75,25 @@ def main():
         print("Continuing...")
     else:
         return 0
-        
 
     # get settings from MAKE-SETTINGS.TXT
-    settings = (script_dir / "MAKE-SETTINGS.TXT").read_text()
-    settings = settings.replace("\t", "")
+    settingsf = open(script_dir+os.sep+"MAKE-SETTINGS.TXT", "r")
+    settings = (settingsf.read()).replace("\t", "")
+    settingsf.close()
     settings = settings.strip()
     list_settings = settings.split("\n")
 
     # check if mode is valid
-    if int(mode) > len(list_settings):
+    if (int(mode) > len(list_settings)):
         print("ERR: Mode Out Of Bounds")
         return -1
-    elif 0 >= int(mode):
+    elif (0 >= int(mode)):
         print("ERR: Mode Cannot Be Zero")
         return -1
     
     # get directories
-    directories = [p.name for p in Path('.').iterdir() if p.is_dir()]
-
+    directories = [name for name in os.listdir('.') if os.path.isdir(name)]
+    
     # get language versions
     lang_ver = list_settings[0]
 
@@ -138,34 +171,34 @@ def main():
                 
                 if "??," not in index_str(list_settings,line_num+1):
                     list_order.append(index_str(list_settings,line_num+1))
-                elif "??:" in index_str(list_settings,line_num+1):
+                else:
                     cancel_parse = True
                     list_order.append("")
-                else:
-                    list_order.append("")
+                    if (c.lower() == "v"):
+                        print("parse canceled on arg: 1")
                     
-                if "??," not in index_str(list_settings,line_num+2):
+                if "??," not in index_str(list_settings,line_num+2) and cancel_parse == False:
                     list_flags.append(index_str(list_settings,line_num+2))
-                elif "??:" in index_str(list_settings,line_num+2) or cancel_parse == True:
+                else:
                     cancel_parse = True
                     list_flags.append("")
-                else:
-                    list_flags.append("")
+                    if (c.lower() == "v"):
+                        print("parse canceled on arg: 2")
                     
-                if "??," not in index_str(list_settings,line_num+3):
+                if "??," not in index_str(list_settings,line_num+3) and cancel_parse == False:
                     list_rm_flags.append(index_str(list_settings,line_num+3))
-                elif "??:" in index_str(list_settings,line_num+3) or cancel_parse == True:
+                else:
                     cancel_parse = True
                     list_rm_flags.append("")
-                else:
-                    list_rm_flags.append("")
+                    if (c.lower() == "v"):
+                        print("parse canceled on arg: 3")
                     
-                if "??," not in index_str(list_settings,line_num+4):
+                if "??," not in index_str(list_settings,line_num+4) and cancel_parse == False:
                     list_so_dlls.append(index_str(list_settings,line_num+4))
-                elif "??:" in index_str(list_settings,line_num+4) or cancel_parse == True:
-                    list_so_dlls.append("")
                 else:
                     list_so_dlls.append("")
+                    if (c.lower() == "v"):
+                        print("parse canceled on arg: 4")
                     
             # clear state
             cdir = None
@@ -183,9 +216,9 @@ def main():
         print("list_rm_flags: " + str(list_rm_flags))
         print("list_so_dlls: " + str(list_so_dlls))
 
-    list_list_flags = [[]]*len(list_flags)
-    list_list_rm_flags = [[]]*len(list_rm_flags)
-    list_list_so_dlls = [[]]*len(list_so_dlls)
+    list_list_flags = [[] for _ in range(len(list_flags))]
+    list_list_rm_flags = [[] for _ in range(len(list_rm_flags))]
+    list_list_so_dlls = [[] for _ in range(len(list_so_dlls))]
     # tokenise flags
     for i,flags in enumerate(list_flags):
         list_list_flags[i] = flags.split(" ")
@@ -221,22 +254,39 @@ def main():
 
     list_commands_gcc = []
 
+    list_stated_dir_files = []
+    for d,directory in enumerate(list_stated_dirs):
+        list_stated_dir_files.append([])
+        list_stated_dir_files[d] = ls_r_x()
+
+    if (c.lower() == "v"):
+        print(d)
+
     # prepare target
     list_target = target.split(" ")
     
     for d,directory in enumerate(list_stated_dirs):
+        march = index_str_nowarn(list_target,0)
+        m = index_str_nowarn(list_target,1)
+        mcpu = index_str_nowarn(list_target,2)
         list_commands_gcc.append("gcc")
         for flag in list_list_flags[d]:
             list_commands_gcc[d] = list_commands_gcc[d] + " -" + flag
         for t,targ in enumerate(list_target):
-            if "??," not in (march:=index_str_nowarn(list_target,0)) and "" != march:
+            if "??," not in march and "" != march:
                 list_commands_gcc[d] = list_commands_gcc[d] + " -march=" + march
-            if "??," not in (m:=index_str_nowarn(list_target,1)) and "" != m:
+            if "??," not in m and "" != m:
                 list_commands_gcc[d] = list_commands_gcc[d] + " -m" + m
-            if "??," not in (mcpu:=index_str_nowarn(list_target,2)) and "" != mcpu:            
+            if "??," not in mcpu and "" != mcpu:
                 list_commands_gcc[d] = list_commands_gcc[d] + " -mcpu=" + mcpu
-
     print(list_commands_gcc)
+
+    max_workers = max(min(len(list_commands_gcc), os.cpu_count() * 2, 80), 24)
+
+    for command_gcc, com_i in enumerate(list_commands_gcc):
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            executor.map(async_bash, list_commands_gcc)
+        print("Running: " + command_gcc)
         
     return 0
 
