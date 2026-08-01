@@ -1,2 +1,2 @@
 # Strychnine-Make
-An overly simple build system using gcc
+An overly simple build system
