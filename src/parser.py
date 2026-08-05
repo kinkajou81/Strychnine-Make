@@ -6,3 +6,4 @@ def get_modes(list_strings: List[str]) -> List[str]:
     while(list_strings[line][:1] != "??"):
         out.append(list_strings[line])
         line += 1
+    return out
