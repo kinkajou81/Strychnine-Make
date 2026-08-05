@@ -10,6 +10,10 @@ def get_modes(list_strings: List[str]) -> List[str]:
     while(list_strings[line][:1] != "??"):
         out.append(list_strings[line])
         line += 1
+    if(out == []):
+        print("ERROR: Malformed mode header\n", file=sys.stderr)
+        exit(-1)
+
     return out
 
 def find_mode_bounds(mode: str, list_strings: List[str]) -> List[int]:
@@ -27,6 +31,10 @@ def find_mode_bounds(mode: str, list_strings: List[str]) -> List[int]:
             out[1] = line
             break
         line += 1
+    if(out[1] == 0):
+        print("ERROR: Malformed mode: " + mode + "\n", file=sys.stderr)
+        exit(-1)
+
     return out
 
 def parse_compiler_relations(s: str):
@@ -39,7 +47,8 @@ def parse_compiler_relations(s: str):
             out.append(segment[(segment.find("??'") + 3):segment.find("??\"")])
             out.append(segment[(segment.find("??\"") + 3):])
         else:
-            print("ERROR: Malformed compiler relation", file=sys.stderr)
+            print("ERROR: Malformed compiler relation\n", file=sys.stderr)
+            exit(-1)
     return out
 
 def parse_build_variables(s: str):
@@ -52,4 +61,6 @@ def parse_build_variables(s: str):
             out.append(segment[(segment.find("??=") + 3):])
         else:
             print("ERROR: Malformed build variables", file=sys.stderr)
+            exit(-1)
     return out
+
