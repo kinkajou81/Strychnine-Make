@@ -1,6 +1,8 @@
 from typing import List
 import string_editing as se
 
+# all instances of list_strings are expected to have leading and trailing whitespace stripped
+
 def get_modes(list_strings: List[str]) -> List[str]:
     out: List[str] = []
     line: int = 0
