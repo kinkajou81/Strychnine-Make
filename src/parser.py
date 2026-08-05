@@ -41,3 +41,15 @@ def parse_compiler_relations(s: str):
         else:
             print("ERROR: Malformed compiler relation", file=sys.stderr)
     return out
+
+def parse_build_variables(s: str):
+    list_s = s.split(" ")
+    out = []
+
+    for segment in list_s:
+        if(segment.find("??=") != -1):
+            out.append(segment[:segment.find("??=")])
+            out.append(segment[(segment.find("??=") + 3):])
+        else:
+            print("ERROR: Malformed build variables", file=sys.stderr)
+    return out
