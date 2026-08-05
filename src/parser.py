@@ -18,8 +18,10 @@ def find_mode_bounds(mode: str, list_strings: List[str]) -> List[int]:
         if(se.remove_whitespace(list_strings[line]) == target):
             out[0] = line
             break
+        line += 1
     while(line < len(list_strings)):
         if(se.remove_whitespace(list_strings[line]) == "??."):
             out[1] = line
             break
+        line += 1
     return out
