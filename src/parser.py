@@ -1,5 +1,6 @@
 from typing import List
 import string_editing as se
+import sys
 
 # all instances of list_strings are expected to have leading and trailing whitespace stripped
 
@@ -26,4 +27,17 @@ def find_mode_bounds(mode: str, list_strings: List[str]) -> List[int]:
             out[1] = line
             break
         line += 1
+    return out
+
+def parse_compiler_relations(s: str):
+    list_s = s.split(" ")
+    out = []
+
+    for segment in list_s:
+        if((segment.find("??'") != -1) and (segment.find("??\"") != -1)):
+            out.append(segment[:segment.find("??'")])
+            out.append(segment[(segment.find("??'") + 3):segment.find("??\"")])
+            out.append(segment[(segment.find("??\"") + 3):])
+        else:
+            print("ERROR: Malformed compiler relation", file=sys.stderr)
     return out
