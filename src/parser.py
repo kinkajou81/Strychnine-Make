@@ -39,7 +39,7 @@ def find_mode_bounds(mode: str, list_strings: List[str]) -> List[int]:
 
 def parse_compiler_relations(s: str):
     if("??," in s):
-        return s
+        return "??,"
 
     list_s = s.split(" ")
     out = []
@@ -56,7 +56,7 @@ def parse_compiler_relations(s: str):
 
 def parse_flags(s: str):
     if("??," in s):
-        return s
+        return "??,"
 
     list_s = s.split(" ")
     out = []
@@ -72,7 +72,7 @@ def parse_flags(s: str):
 
 def parse_build_variables(s: str):
     if("??," in s):
-        return s
+        return "??,"
 
     list_s = s.split(" ")
     out = []
