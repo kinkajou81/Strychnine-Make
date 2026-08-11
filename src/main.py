@@ -3,6 +3,7 @@ from threading import Thread
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
 import sys
+import parser
 
 def main():
     flags = [x for x in sys.argv[1:] if (x[0] == "-")]
