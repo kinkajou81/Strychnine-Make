@@ -54,6 +54,22 @@ def parse_compiler_relations(s: str):
             exit(-1)
     return out
 
+def parse_flags(s: str):
+    if("??," in s):
+        return s
+
+    list_s = s.split(" ")
+    out = []
+
+    for segment in list_s:
+        if((segment.find("??'") != -1) and (segment.find("??\"") != -1)):
+            out.append(segment[:segment.find("??'")])
+            out.append(segment[(segment.find("??'") + 3):])
+        else:
+            print("ERROR: Malformed flags\n", file=sys.stderr)
+            exit(-1)
+    return out
+
 def parse_build_variables(s: str):
     if("??," in s):
         return s
