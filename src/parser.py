@@ -1,5 +1,5 @@
 from typing import List
-import string_editing as se
+import editing
 import sys
 
 # all instances of list_strings are expected to have leading and trailing whitespace stripped
@@ -22,12 +22,12 @@ def find_mode_bounds(mode: str, list_strings: List[str]) -> List[int]:
 
     line: int = 0 # two loops with shared index to ensure proper ordering
     while(line < len(list_strings)):
-        if(se.remove_whitespace(list_strings[line]) == target):
+        if(editing.remove_whitespace(list_strings[line]) == target):
             out[0] = line
             break
         line += 1
     while(line < len(list_strings)):
-        if(se.remove_whitespace(list_strings[line]) == "??."):
+        if(editing.remove_whitespace(list_strings[line]) == "??."):
             out[1] = line
             break
         line += 1
