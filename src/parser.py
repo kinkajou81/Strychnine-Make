@@ -150,3 +150,33 @@ def parse_directory_section(list_strings: List[str], offset: int):
 
     return out
 
+# list_strings should only be of the source for the current mode (still with leading/trailign whitespace stripped)
+def parse_mode_settings(list_strings: List[str]) -> dict:
+    out: dict = {}
+    out["directory"] = []
+
+    try:
+        line_number: int = 0
+        while(line_number < len(list_strings)):
+            if "??," in list_strings[line_number]:
+                line_number += 1
+                continue
+
+            if(line_number == 0):
+                out["name"] = list_strings[0]
+            elif(line_number == 1):
+                out["compiler_relation"] = parse_compiler_relations(list_strings[1])
+            elif(line_number == 2):
+                out["global_flags"] = list_strings[2].split(" ")
+            elif(line_number == 3):
+                out["compilation_target"] = list_strings[3]
+            elif(line_number == 4):
+                out["build_variables"] = parse_build_variables(list_strings[4])
+            elif "??:" in list_strings[line_number]:
+                out["directory"].append(parse_directory_section(list_strings, line_number))
+                line_number += 6
+            line_number += 1
+    except:
+        print("ERROR: Selected mode settings are too short")
+
+    return out
