@@ -18,5 +18,3 @@ def main():
 errcode = main()
 if(errcode != 0):
     print("Exiting With Failure...")
-else:
-    print("Exiting...")
