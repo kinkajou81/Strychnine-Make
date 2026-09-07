@@ -4,18 +4,6 @@ import sys
 
 # all instances of list_strings are expected to have leading and trailing whitespace stripped
 
-def get_modes(list_strings: List[str]) -> List[str]:
-    out: List[str] = []
-    line: int = 0
-    while((list_strings[line][:2] != "??") and (line < len(list_strings))):
-        out.append(list_strings[line])
-        line += 1
-    if(out == []):
-        print("ERROR: Malformed mode header\n", file=sys.stderr)
-        exit(-1)
-
-    return out
-
 def find_mode_bounds(mode: str, list_strings: List[str]) -> List[int]:
     out: List[int] = [0,0]
     target: str = "??>" + mode
