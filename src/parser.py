@@ -147,6 +147,7 @@ def parse_directory_section(list_strings: List[str], offset: int):
             line_number += 1
     except:
         print("ERROR: Settings for directory " + out["directory"] + " are too short")
+        exit(-1)
 
     return out
 
@@ -178,5 +179,6 @@ def parse_mode_settings(list_strings: List[str]) -> dict:
             line_number += 1
     except:
         print("ERROR: Selected mode settings are too short")
+        exit(-1)
 
     return out
