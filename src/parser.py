@@ -52,6 +52,7 @@ def parse_compiler_relations(s: str):
         else:
             print("ERROR: Malformed compiler relation\n", file=sys.stderr)
             exit(-1)
+
     return out
 
 def parse_flags(s: str):
@@ -68,6 +69,7 @@ def parse_flags(s: str):
         else:
             print("ERROR: Malformed flags\n", file=sys.stderr)
             exit(-1)
+
     return out
 
 def parse_build_variables(s: str):
@@ -84,5 +86,6 @@ def parse_build_variables(s: str):
         else:
             print("ERROR: Malformed build variables", file=sys.stderr)
             exit(-1)
+
     return out
 
