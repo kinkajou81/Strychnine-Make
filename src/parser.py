@@ -37,6 +37,37 @@ def find_mode_bounds(mode: str, list_strings: List[str]) -> List[int]:
 
     return out
 
+def remove_comments(s: str):
+    out: str = ""
+
+    is_comment: List[bool] = [False]*len(s)
+    inside_comment: bool = False
+
+    comment_opener: str = "??/"
+    comment_closer: str = "\n"
+
+    character_position: int = 0
+    while(character_position < len(s)):
+        if(inside_comment):
+            is_comment[character_position] = True
+
+        if(character_position + len(comment_opener) <= len(s)):
+            if(s[character_position:(character_position + len(comment_closer))] == comment_closer and inside_comment):
+                is_comment[character_position] = False
+                inside_comment = False
+            elif(s[character_position:(character_position + len(comment_opener))] == comment_opener and not inside_comment):
+                inside_comment = True
+                is_comment[character_position] = True
+        character_position += 1
+
+    character_position = 0
+    while(character_position < len(s)):
+        if(not is_comment[character_position]):
+            out += (s[character_position])
+        character_position += 1
+
+    return out
+
 def parse_compiler_relations(s: str):
     if("??," in s):
         return "??,"
