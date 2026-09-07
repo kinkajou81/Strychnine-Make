@@ -91,14 +91,31 @@ def parse_build_variables(s: str):
 
 def parse_directory_section(list_strings: List[str], offset: int):
     out: dict = {}
+    line_number = offset
 
-    out["directory"] = list_strings[offset][3:]
-    out["order"] = list_strings[offset + 1]
-    out["compiler_relation"] = parse_compiler_relations(list_strings[offset + 2])
-    out["arguments"] = list_strings[offset + 3].split(" ")
-    out["removed arguments"] = list_strings[offset + 4].split(" ")
-    out["dynamic link objects"] = list_strings[offset + 5].split(" ")
-    out["is executable"] = list_strings[offset + 6]
+    try:
+        while(line_number <= (offset + 6)):
+            if "??," in list_strings[line_number]:
+                line_number += 1
+                continue
+
+            if(line_number == offset):
+                out["directory"] = list_strings[line_number][3:]
+            elif(line_number == (offset + 1)):
+                out["order"] = list_strings[line_number]
+            elif(line_number == (offset + 2)):
+                out["compiler_relation"] = parse_compiler_relations(list_strings[line_number])
+            elif(line_number == (offset + 3)):
+                out["arguments"] = list_strings[line_number].split(" ")
+            elif(line_number == (offset + 4)):
+                out["removed arguments"] = list_strings[line_number].split(" ")
+            elif(line_number == (offset + 5)):
+                out["dynamic link objects"] = list_strings[line_number].split(" ")
+            elif(line_number == (offset + 6)):
+                out["is executable"] = list_strings[line_number]
+            line_number += 1
+    except:
+        print("ERROR: Settings for directory " + out["directory"] + " are too short")
 
     return out
 
