@@ -94,7 +94,6 @@ def parse_directory_section(list_strings: List[str], offset: int):
 
     out["directory"] = list_strings[offset][3:]
     out["order"] = list_strings[offset + 1]
-    out["linking"] = list_strings[offset + 2].split(" ")
     out["arguments"] = list_strings[offset + 3].split(" ")
     out["removed arguments"] = list_strings[offset + 4].split(" ")
     out["dynamic link objects"] = list_strings[offset + 5].split(" ")
