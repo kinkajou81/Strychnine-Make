@@ -29,6 +29,4 @@ def main():
 
     return 0
 
-errcode = main()
-if(errcode != 0):
-    print("Exiting With Failure...")
+sys.exit(main())
