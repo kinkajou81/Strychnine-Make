@@ -113,7 +113,7 @@ def parse_directory_section(list_strings: List[str], offset: int):
     line_number = offset
 
     try:
-        while(line_number <= (offset + 6)):
+        while(line_number <= (offset + 7)):
             if "??," in list_strings[line_number]:
                 line_number += 1
                 continue
@@ -131,6 +131,8 @@ def parse_directory_section(list_strings: List[str], offset: int):
             elif(line_number == (offset + 5)):
                 out["dynamic link objects"] = list_strings[line_number].split(" ")
             elif(line_number == (offset + 6)):
+                out["local dynamic link objects"] = list_strings[line_number].split(" ")
+            elif(line_number == (offset + 7)):
                 out["is executable"] = list_strings[line_number]
             line_number += 1
     except:
@@ -163,7 +165,7 @@ def parse_mode_settings(list_strings: List[str]) -> dict:
                 out["build_variables"] = parse_build_variables(list_strings[4])
             elif "??:" in list_strings[line_number]:
                 out["directory"].append(parse_directory_section(list_strings, line_number))
-                line_number += 6
+                line_number += 7
             line_number += 1
     except:
         print("ERROR: Selected mode settings are too short")
