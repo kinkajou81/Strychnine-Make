@@ -156,7 +156,7 @@ def parse_mode_settings(list_strings: List[str]) -> dict:
             elif(line_number == 1):
                 out["compiler_relation"] = parse_compiler_relations(list_strings[1])
             elif(line_number == 2):
-                out["global_flags"] = list_strings[2].split(" ")
+                out["arguments"] = list_strings[2].split(" ")
             elif(line_number == 3):
                 out["compilation_target"] = list_strings[3]
             elif(line_number == 4):
