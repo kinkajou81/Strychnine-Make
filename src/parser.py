@@ -21,7 +21,7 @@ def find_mode_bounds(mode: str, list_strings: List[str]) -> List[int]:
         line += 1
     if(out[1] == 0):
         print("ERROR: Malformed mode: " + mode + "\n", file=sys.stderr)
-        sys.exit(-1)
+        sys.exit(1)
 
     return out
 
@@ -70,7 +70,7 @@ def parse_compiler_relations(s: str) -> List[str]:
             out.append(segment[(segment.find("??\"") + 3):])
         else:
             print("ERROR: Malformed compiler relation\n", file=sys.stderr)
-            sys.exit(-1)
+            sys.exit(1)
 
     return out
 
@@ -87,7 +87,7 @@ def parse_flags(s: str) -> List[str]:
             out.append(segment[(segment.find("??'") + 3):])
         else:
             print("ERROR: Malformed flags\n", file=sys.stderr)
-            sys.exit(-1)
+            sys.exit(1)
 
     return out
 
@@ -104,7 +104,7 @@ def parse_build_variables(s: str) -> List[str]:
             out.append(segment[(segment.find("??=") + 3):])
         else:
             print("ERROR: Malformed build variables", file=sys.stderr)
-            sys.exit(-1)
+            sys.exit(1)
 
     return out
 
@@ -114,7 +114,7 @@ def parse_is_executable(s: str) -> str:
         return s
     else:
         print("ERROR: Malformed is executable", file=sys.stderr)
-        sys.exit(-1)
+        sys.exit(1)
 
 def parse_directory_section(list_strings: List[str], offset: int) -> dict:
     out: dict = {}
@@ -143,7 +143,7 @@ def parse_directory_section(list_strings: List[str], offset: int) -> dict:
             line_number += 1
     except:
         print("ERROR: Settings for directory " + out["directory"] + " are too short")
-        sys.exit(-1)
+        sys.exit(1)
 
     return out
 
@@ -179,6 +179,6 @@ def parse_mode_settings(list_strings: List[str]) -> dict:
             line_number += 1
     except:
         print("ERROR: Selected mode settings are too short")
-        sys.exit(-1)
+        sys.exit(1)
 
     return out
