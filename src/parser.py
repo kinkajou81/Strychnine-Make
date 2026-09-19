@@ -25,7 +25,7 @@ def find_mode_bounds(mode: str, list_strings: List[str]) -> List[int]:
 
     return out
 
-def remove_comments(s: str):
+def remove_comments(s: str) -> str:
     out: str = ""
 
     is_comment: List[bool] = [False]*len(s)
@@ -56,7 +56,7 @@ def remove_comments(s: str):
 
     return out
 
-def parse_compiler_relations(s: str):
+def parse_compiler_relations(s: str) -> List[str]:
     if("??," in s):
         return "??,"
 
@@ -74,7 +74,7 @@ def parse_compiler_relations(s: str):
 
     return out
 
-def parse_flags(s: str):
+def parse_flags(s: str) -> List[str]:
     if("??," in s):
         return "??,"
 
@@ -91,7 +91,7 @@ def parse_flags(s: str):
 
     return out
 
-def parse_build_variables(s: str):
+def parse_build_variables(s: str) -> List[str]:
     if("??," in s):
         return "??,"
 
@@ -108,7 +108,7 @@ def parse_build_variables(s: str):
 
     return out
 
-def parse_directory_section(list_strings: List[str], offset: int):
+def parse_directory_section(list_strings: List[str], offset: int) -> dict:
     out: dict = {}
     line_number = offset
 
