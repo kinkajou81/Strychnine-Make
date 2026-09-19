@@ -108,6 +108,13 @@ def parse_build_variables(s: str) -> List[str]:
 
     return out
 
+def parse_is_executable(s: str) -> str:
+    if(s == "true" or s == "false"):
+        return s
+    else:
+        print("ERROR: Malformed is executable", file=sys.stderr)
+        sys.exit(-1)
+
 def parse_directory_section(list_strings: List[str], offset: int) -> dict:
     out: dict = {}
     line_number = offset
@@ -133,7 +140,7 @@ def parse_directory_section(list_strings: List[str], offset: int) -> dict:
             elif(line_number == (offset + 6)):
                 out["local dynamic link objects"] = list_strings[line_number].split(" ")
             elif(line_number == (offset + 7)):
-                out["is executable"] = list_strings[line_number]
+                out["is executable"] = parse_is_executable(list_strings[line_number])
             line_number += 1
     except:
         print("ERROR: Settings for directory " + out["directory"] + " are too short")
@@ -166,7 +173,7 @@ def parse_mode_settings(list_strings: List[str]) -> dict:
             elif(line_number == 5):
                 out["dynamic link objects"] = list_strings[5].split(" ")
             elif(line_number == 6):
-                out["is executable"] = list_strings[6]
+                out["is executable"] = parse_is_executable(list_strings[6])
             elif "??:" in list_strings[line_number]:
                 out["directory"].append(parse_directory_section(list_strings, line_number))
                 line_number += 7
