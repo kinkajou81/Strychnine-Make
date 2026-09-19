@@ -137,10 +137,8 @@ def parse_directory_section(list_strings: List[str], offset: int) -> dict:
             elif(line_number == (offset + 4)):
                 out["removed arguments"] = list_strings[line_number].split(" ")
             elif(line_number == (offset + 5)):
-                out["dynamic link objects"] = list_strings[line_number].split(" ")
+                out["output location"] = list_strings[line_number]
             elif(line_number == (offset + 6)):
-                out["local dynamic link objects"] = list_strings[line_number].split(" ")
-            elif(line_number == (offset + 7)):
                 out["is executable"] = parse_is_executable(list_strings[line_number])
             line_number += 1
     except:
@@ -172,7 +170,7 @@ def parse_mode_settings(list_strings: List[str]) -> dict:
             elif(line_number == 4):
                 out["build_variables"] = parse_build_variables(list_strings[4])
             elif(line_number == 5):
-                out["dynamic link objects"] = list_strings[5].split(" ")
+                out["output location"] = list_strings[line_number]
             elif(line_number == 6):
                 out["is executable"] = parse_is_executable(list_strings[6])
             elif "??:" in list_strings[line_number]:
