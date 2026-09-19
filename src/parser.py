@@ -163,6 +163,8 @@ def parse_mode_settings(list_strings: List[str]) -> dict:
                 out["compilation_target"] = list_strings[3]
             elif(line_number == 4):
                 out["build_variables"] = parse_build_variables(list_strings[4])
+            elif(line_number == 5):
+                out["dynamic link objects"] = list_strings[5].split(" ")
             elif "??:" in list_strings[line_number]:
                 out["directory"].append(parse_directory_section(list_strings, line_number))
                 line_number += 7
