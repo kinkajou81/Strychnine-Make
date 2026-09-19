@@ -109,6 +109,7 @@ def parse_build_variables(s: str) -> List[str]:
     return out
 
 def parse_is_executable(s: str) -> str:
+    s = editing.remove_whitespace(s)
     if(s == "true" or s == "false"):
         return s
     else:
